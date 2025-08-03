@@ -1,17 +1,14 @@
-const useImageMagick = true;
-
 import gulp from "gulp";
 import rename from "gulp-rename";
 import changed from "gulp-changed";
-import imageresize from "gulp-image-resize";
-import imagemin from "gulp-imagemin";
-import imageminMozJpeg from "imagemin-mozjpeg";
-import imageminWebp from "imagemin-webp";
 import sharp from "sharp";
 import through2 from "through2";
 import lqip from "lqip-modern";
 import File from "vinyl";
 import path from "path";
+
+const webpEffort = 5;
+const avifEffort = 7;
 
 /**
  * Convert files to JPEG according to the specifications given in a configuration.
@@ -30,18 +27,27 @@ const resizeImageJpg = (configuration) => {
             changed(configuration.dest, { extension: version.suffix + ".jpg" })
           )
           .pipe(
-            imageresize({
-              percentage: version.percent,
-              quality: 1,
-              imageMagick: useImageMagick,
-              format: "jpeg",
+            through2.obj(async function (file, _, cb) {
+              let metadata = await getImageMetadata(file.contents);
+              let width = Math.floor((metadata.width * version.percent) / 100);
+              let converted = sharp(file.contents)
+                .withMetadata()
+                .resize({ width: width })
+                .jpeg({
+                  quality: Math.floor(version.quality.jpg * 100),
+                  mozjpeg: true,
+                })
+                .toBuffer();
+              return converted
+                .then(function (buffer) {
+                  file.contents = buffer;
+                  return cb(null, file);
+                })
+                .catch(function (err) {
+                  console.error(err);
+                  return cb(null, file);
+                });
             })
-          )
-          .pipe(
-            imagemin(
-              [imageminMozJpeg({ quality: version.quality.jpg * 100 })],
-              { verbose: true }
-            )
           )
           .pipe(
             rename(function (path) {
@@ -74,15 +80,27 @@ const resizeImageWebp = (configuration) => {
             changed(configuration.dest, { extension: version.suffix + ".webp" })
           )
           .pipe(
-            imageresize({
-              percentage: version.percent,
-              quality: 1,
-              imageMagick: useImageMagick,
-            })
-          )
-          .pipe(
-            imagemin([imageminWebp({ quality: version.quality.webp * 100 })], {
-              verbose: true,
+            through2.obj(async function (file, _, cb) {
+              let metadata = await getImageMetadata(file.contents);
+              let width = Math.floor((metadata.width * version.percent) / 100);
+              let converted = sharp(file.contents)
+                .withMetadata()
+                .resize({ width: width })
+                .webp({
+                  quality: Math.floor(version.quality.webp * 100),
+                  preset: "photo",
+                  effort: webpEffort,
+                })
+                .toBuffer();
+              return converted
+                .then(function (buffer) {
+                  file.contents = buffer;
+                  return cb(null, file);
+                })
+                .catch(function (err) {
+                  console.error(err);
+                  return cb(null, file);
+                });
             })
           )
           .pipe(
@@ -129,8 +147,12 @@ const resizeImageAvif = (configuration) => {
               let metadata = await getImageMetadata(file.contents);
               let width = Math.floor((metadata.width * version.percent) / 100);
               let converted = sharp(file.contents)
+                .withMetadata()
                 .resize({ width: width })
-                .avif({ quality: Math.floor(version.quality.avif * 100) })
+                .avif({
+                  quality: Math.floor(version.quality.avif * 100),
+                  effort: avifEffort,
+                })
                 .toBuffer();
               return converted
                 .then(function (buffer) {
