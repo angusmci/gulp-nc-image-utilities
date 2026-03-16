@@ -24,7 +24,9 @@
     "url": "https://github.com/angusmci/gulp-nc-image-utilities/issues"
   },
   "homepage": "https://github.com/angusmci/gulp-nc-image-utilities#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "node-gyp": "^12.2.0"
+  },
   "dependencies": {
     "gulp": "^5.0.1",
     "gulp-changed": "^5.0.4",
