@@ -1,6 +1,6 @@
 {
   "name": "gulp-nc-image-utilities",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Simple utility functions for resizing and reformatting images for website use",
   "main": "index.mjs",
   "scripts": {
@@ -24,15 +24,13 @@
     "url": "https://github.com/angusmci/gulp-nc-image-utilities/issues"
   },
   "homepage": "https://github.com/angusmci/gulp-nc-image-utilities#readme",
-  "devDependencies": {
-    "jshint": "^2.13.5"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "gulp": "^4.0.2",
-    "gulp-changed": "^4.0.3",
-    "gulp-rename": "^2.0.0",
-    "sharp": "^0.31.1",
-    "through2": "^4.0.2",
-    "lqip-modern": "^2.0.0"
+    "gulp": "^5.0.1",
+    "gulp-changed": "^5.0.4",
+    "gulp-rename": "^2.1.0",
+    "lqip-modern": "^2.2.1",
+    "sharp": "^0.34.5",
+    "through2": "^4.0.2"
   }
 }
