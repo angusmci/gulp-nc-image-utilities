@@ -25,11 +25,10 @@
   },
   "homepage": "https://github.com/angusmci/gulp-nc-image-utilities#readme",
   "devDependencies": {
-    "jshint": "^2.13.5",
-    "node-gyp": "^12.2.0"
+    "jshint": "^2.13.5"
   },
   "dependencies": {
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.1",
     "gulp-changed": "^4.0.3",
     "gulp-rename": "^2.0.0",
     "lqip-modern": "^2.0.0",
