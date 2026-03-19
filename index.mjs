@@ -28,9 +28,9 @@ const resizeImageJpg = (configuration) => {
           )
           .pipe(
             through2.obj(async function (file, _, cb) {
-              let metadata = await getImageMetadata(file.contents);
+              let metadata = await sharp(file.path).metadata();
               let width = Math.floor((metadata.width * version.percent) / 100);
-              let converted = sharp(file.contents)
+              let converted = sharp(file.path)
                 .withMetadata()
                 .resize({ width: width })
                 .jpeg({
@@ -81,9 +81,9 @@ const resizeImageWebp = (configuration) => {
           )
           .pipe(
             through2.obj(async function (file, _, cb) {
-              let metadata = await getImageMetadata(file.contents);
+              let metadata = await sharp(file.path).metadata();
               let width = Math.floor((metadata.width * version.percent) / 100);
-              let converted = sharp(file.contents)
+              let converted = sharp(file.path)
                 .withMetadata()
                 .resize({ width: width })
                 .webp({
@@ -118,16 +118,6 @@ const resizeImageWebp = (configuration) => {
 };
 
 /**
- * Use `sharp` to get the metadata for an image.
- *
- * @param {*} input
- * @returns
- */
-const getImageMetadata = async (input) => {
-  return await sharp(input).metadata();
-};
-
-/**
  * Convert files to AVIF according to the specifications given in a configuration.
  *
  * @param {*} configuration
@@ -144,9 +134,9 @@ const resizeImageAvif = (configuration) => {
           )
           .pipe(
             through2.obj(async function (file, _, cb) {
-              let metadata = await getImageMetadata(file.contents);
+              let metadata = await sharp(file.path).metadata();
               let width = Math.floor((metadata.width * version.percent) / 100);
-              let converted = sharp(file.contents)
+              let converted = sharp(file.path)
                 .withMetadata()
                 .resize({ width: width })
                 .avif({
